@@ -1,0 +1,71 @@
+Day02笔记
+1. 数据的分类
+    1. 结构化的数据
+        特点:有固定的格式, 如:HTML XML JSON 
+    2. 非结构化数据
+        如 : 图片, 视频, 这类数据一般存储为二进制
+2. re模块
+    1. 使用流程
+        1. p = re.compile(r'正则表达式',re.S)
+        2. rObj = p.match('html字符串')  # 匹配字符串开头, 返回对象
+        3. r = r.group(0) # group()括号中默认是0
+    2. 常用方法
+        1. findall(html) : 所有全部匹配, 返回1个列表
+        2. match(html)   : 匹配字符串开头, 返回对象
+        3. search(html)  : 从开始匹配, 匹配到第1个结束, 返回对象
+3. 元字符
+    .   : 任意字符(不包括\n)
+    \d  : 数字
+    \s  : 空白字符
+    \S  : 非空白字符
+        [\s\S]任意1个字符, 等同于p=re.compile('.',re.S)
+                                p=re.compile('[\s\S]')
+    [...] : 包含[]中内容
+    \w    : 数字 字母 下划线
+    \W    : 不是数字字母下划线的特殊字符
+
+4. 贪婪匹配和非贪婪匹配
+    .*  : 贪婪匹配, 在整个表达式匹配成功的前提下, 尽可能多的去匹配*
+    .*? : 非贪婪匹配, 在整个表达式匹配成功的前提下, 尽可能少的去匹配*
+5. 正则表达式分组(findall())
+    html = '''<div class="animal">
+                <p class="name">
+                    <a title="Tiger">
+                    </a>
+                </p>
+                <p class="content">
+                    Two tigers two tigers run fast
+                </p>
+            </div>
+            '''
+6. 内涵段子脑筋急转弯
+    1. URL规律
+        第一页URL:https://www.neihan8.com/njjzw/index.html
+        第二页URL:https://www.neihan8.com/njjzw/index2.html
+    2. 正则表达式匹配内容
+        '<div class="text-.*?title="(.*?)">.*?class="desc">(.*?)</div>'
+    3. 写代码
+7. csv模块使用流程
+    1. 打开csv文件
+        with open("ceshi .csv","w") as f:
+    2. 初始化写入对象
+        writer = csv.writer(f)
+    3. 写入数据
+        writer.writerow(列表)
+8. 远程存入Mysql数据库
+    1. 开启远程连接,
+        注释掉: bind-address=127.0.0.1
+        /etc/mysql/mysql.conf.d/mysqld.cnf
+        改完之后重启mysql服务
+    2. 添加授权用户
+        mysql> grant all privieges on *.* to "用户名"@"%" identified by "123456"
+        with grant option;
+    3. 关闭防火墙
+        sudo ufw disable
+    或者将第3步改为给防火墙添加规则
+    3. 添加规则允许外部访问3306端口
+        sudo ufw allow 3306
+9. Ubuntu 中防火墙(ufw)基本操作
+    1. 打开防火墙 : sudo ufw enable
+    2. 关闭防火墙 : sudo ufw disable
+    3. 添加规则 : sudo ufw allow 端口号
