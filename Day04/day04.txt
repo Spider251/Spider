@@ -1,0 +1,86 @@
+1. Fiddler抓包工具设置
+    1. 设置Fiddler软件
+        1. https: Tools - options - HTTPS -
+        ... from browsers only
+        2. connections: 设置端口号 8888
+        3. 重启Fiddler软件
+    2. 设置Chrome浏览器
+        1. 安装代理切换插件 : Proxy SwitchOmega
+        2. 选项 - 新建情景模式 - HTTP 127.0.0.1 8888 - 应用情景模式
+        3. 把代理切换到自己新建的情景模式上
+    3. Fiddler常用菜单
+        1. Inspector : 查看数据包详细内容
+            1. 分为 请求(request) 和 响应(response)两部分
+        2. 常用的子选项卡
+            1. Headers : 显示请求头信息
+2.
+    pass
+3. 抓取百度贴吧帖子中所有图片
+    1. 目标 : 指定贴吧所有帖子的图片
+    2. 思路
+        1. 获取贴吧主页的URL, 下一页
+        2. 获取1页中每个帖子的URL
+        3. 对每个帖子的URL发请求, 获取帖子中图片的URL
+        4. 依次对图片URL发请求, 以wb方式保存到本地
+    3. 思路梳理
+        帖子链接列表 = parseHtml.xpath("...")
+        for 1个帖子链接 in 帖子链接列表:
+            html = 对每个帖子发起请求得到的响应内容
+            图片链接列表 = parseHtml.xpath("...")
+            for 1个图片链接 in 图片链接列表:
+                html = 对每个图片发请求得到响应
+    4. 步骤
+        1. 获取贴吧主页URL
+            http://tieba.baidu.com/f? + 查询参数
+        2. 提取页面中所有帖子的URL
+            href : /p/5983687960
+                    域名 + href 为帖子的链子
+                    http://tieba.baidu.com/p/5983687960
+            xpath表达式 : //div[@class="t_con cleafix"]/div/div/div/a/@href
+
+        3. 每个图片的url
+            //div[@class="d_post_content j_d_post_content  clearfix"]/img[@class="BDE_Image"]/@src
+4. 糗事百科(xpath高级用法)
+    1. 目标 : 用户昵称 内容 好笑数 评论数
+    2. 步骤
+        1. URL : 
+            https://www.qiushibaike.com/text/
+        2. xpath表达式
+            1. 匹配出所有段子的对象
+                xpath代码 : //div[contains(@id,"qiushi_tag_")]
+                结果 :  baseList = [<element...>,<element...>,]
+            2. 利用节点对象调用xpath
+                用户昵称 : ./div/a/h2
+                段子内容 : ./a/div[@class="content"]/span
+                评论数量 : .//i[@class="number"]
+                            [好笑数量对象,评论对象]
+               
+                for base in baseList:
+                        昵称 = base.xpath('./')        
+5. json模块
+    1. json格式的字符串和python数据类型之间转换
+    2. json.loads(html) : json 转 python
+    3. json.dumps(python) : python 转 json
+6. 动态网站数据抓取(Ajax)
+    1. 特点 : 滚动鼠标滑轮时加载
+    2. 案例 : 豆瓣电影排行榜数据抓取
+        1. 抓取目标 : 豆瓣电影 - 排行榜 - 剧情
+                        电影名称 评分
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
