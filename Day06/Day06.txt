@@ -1,0 +1,144 @@
+Day05回顾
+1. selenium+phantomjs/Chromedriver
+    1. selenium : Web自动化测试工具
+    2. phantomjs : 无界面浏览器(无头浏览器)
+2. 使用流程
+    1. 导入模块
+        from selenium import driver
+    2. 创建浏览器对象
+        driver = webdriver.Chrome()
+    3. 获取网页信息
+        driver.get('https://www.baidu.com')
+    4. 查找节点位置
+        ele = driver.find_element_by_class_name('ID属性值')
+    5. 发送文字
+        ele.send_keys('发送的内容')
+    6. 点击
+        click = driver.find_element_bu_id('')
+        click.click()
+    7. 关闭浏览器
+        driver.close()
+3. 常用方法
+    1. driver.get(url)
+    2. driver.page_source
+    3. driver.page_source.find('')
+        未找到此节点,则返回-1,找到此节点返回其他值
+    4. driver.find_element_by_class_name('')
+    5. driver.find_elements_by_class_name('')
+    6. driver.find_elements_by_xpath('xpath表达式')
+    7. 对象名.send_keys('')
+    8. 对象名.click()
+    9. driver.quit()
+4. 使用chromedriver一定要下载对应版本的
+5. 设置无界面模式
+    opt = webdriver.ChromeOptions()
+    opt.set_headless()
+    以下参数可有可无
+    opt.add_arguments('window-szie=...')
+    driver = webdriver.Chrome(options=opt)
+6. driver如何执行js脚本
+    下拉滚动条到最下层
+    driver.execute_script('window.srollTo(0,document.boy.scrollHeight)')
+7. 多线程爬虫
+    1. 应用场景
+        1. 多进程 : 大量的密集的计算
+        2. 多线程 : 依赖网络I/O程序(爬虫)
+****************************************************************************
+1. 多线程爬虫
+    1. 队列(from multiprocessing import Queue)
+        UrlQueue = Queue()
+        UrlQueue.put(url)
+        UrlQueue.get() # 阻塞
+                    block=True,timeout=2
+        UrlQueue.empty()
+    2. 线程(from threading import Thread)
+        t = Thread(target=getPage)
+        t.start()
+        t.join() # 阻塞等待回收线程
+2. 小米应用商店数据爬取(多线程)
+    1. 网址 : 小米应用商店
+    2. 分类及爬取内容
+        学习教育
+        基准xpath : //ul[@class="applist"]//li
+        应用名称 : ./h5/a
+        应用链接 : ./h5/a/@href
+3. BeautifulSoup(解析)
+    1. HTML 或者 XML解析器, 依赖于lxm
+    2. 安装 : conda install beautifulsoup4
+    3. 使用流程
+        1. 导入模块
+            from bs4 import BeautifulSoup4
+        2. 创建解析对象
+            soup = BeautifulSoup(html,'lxml')
+        3. 查找节点对象
+            rList = soup.find_all('div',{'id':'属性值'})
+4. 支持解析库
+    1. lxml : 速度快, 文档容错能力强
+    2. html.parser : python标准库
+        速度一般, 文档容错能力一般
+    3. xml : 速度快, 文档容错能力强
+5. 安装Scrapy
+    1. sudo pip3 install Scrapy 
+6. Scrapy框架 
+    1. 引擎(Engine):整个框架核心
+    2. 调度器(scheduler)
+        接收从引擎发过来的URL给调度器入队列  
+    3. 下载器(Downloader)
+        获取response, 返回给爬虫程序
+    4. 项目管道(Item Pipeline)
+        数据处理
+    5. 中间件
+        1. 下载器中间件(Downloader Minddlewares)
+            处理引擎与下载器之间的请求及响应
+        2. 蜘蛛中间件(Spider Middlewares)
+            处理爬虫程序输入响应和输出结果以及新的请求
+7. 制作Scrapy爬虫项目步骤
+    1. 新建项目
+        scrapy startproject 项目名
+    2. 明确目标(items.py)
+    3. 制作爬虫程序
+        cd spiders
+        scrapy genspider 文件名 域名
+    4. 处理数据(pipelines.py)
+    5. 全局配置(settings.py)
+    6. 运行爬虫项目
+        scrapy crawl 爬虫名
+8. scrapy项目文件
+    1. 目录结构
+        Baidu/
+            |-- scrapy.cfg : 项目基本配置,不用改
+            |-- Baidu/  :项目目录
+                    |--items.py : 定义爬取数据结构
+                    |--middlewares.py : 中间件
+    2. settings.py配置
+        优先级: 1-1000,数字越小,优先级越高
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
