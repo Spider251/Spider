@@ -5,6 +5,7 @@ from lxml import etree
 from fake_useragent import UserAgent
 import time
 from urllib.parse import urlencode
+import json
 ua = UserAgent()
 
 
@@ -19,12 +20,12 @@ class XiaoMiSpider:
         self.parseQueue = Queue()
     # URL入队列
     def getUrl(self):
-        for page in range(20):
+        for page in range(5):
             params = urlencode({'page':str(page),'categoryId':'2','pageSize':'30'})
             url = self.url + params
             # 把拼接的url地址放到url队列中
             print(url)
-#            self.urlQueue.put(url)
+            self.urlQueue.put(url)
     # 采集线程函数,get出url发请求,把html给解析队列
     def getHtml(self):
         while True:
@@ -38,29 +39,30 @@ class XiaoMiSpider:
                 # 把html放到解析队列
                 self.parseQueue.put(html)
             else:
-                break 
+                break
     # 解析线程函数, get出html源码, 提取并处理数据
     def getData(self):
         while True:
             if not self.parseQueue.empty():
+            
                 html = self.parseQueue.get()
-                # 创建解析对象, 调用xpath,提取数据
-                parseHtml = etree.HTML(html)
-                baseList = parseHtml.xpath('//ul[@class="applist"]//li')
-                for base in baseList:
-                    # 应用名称
-                    name = base.xpath('./h5/a/text()')[0]
-                    # 应用链接
-                    link = self.mainurl + base.xpath('./h5/a/@href')[0]
-                    d = {
-                            "分类":"学习教育",
-                            "应用名称":name,
-                            "应用链接":link,
-                            }
-                    with open('xiaomi.json','a',encoding='utf-8') as f:
-                        f.write(str(d) + '\n')
+                hList = json.loads(html)['data']
+                for h in hList:
+#                     应用名称
+                    print(type(h))
+#                    name = h['dsiplayName']
+##                     应用链接
+#                    link = 'http://app.mi.com/details?id='+h['packageName']
+#                    d = {
+#                            "分类":"学习教育",
+#                            "应用名称":name,
+#                            "应用链接":link,
+#                            }
+#                    with open('xiaoxiaomi.json','a',encoding='utf-8') as f:
+#                        f.write(str(d) + '\n')
             else:
                 break
+            
                     
     def main(self):
         # url先入队列

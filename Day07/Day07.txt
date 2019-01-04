@@ -1,0 +1,80 @@
+1. yield回顾
+    1. 作用 : 把1个函数当做1个生成器使用
+    2. 特点 : 让函数暂停, 等待下1次调用
+2. Csdn
+    1. 网址 : https://blog.csdn.net/XiaoYi_Eric/article/details/85559389
+    2. 爬取目标 : 标题, 发表时间, 阅读数
+    xpath表达式:
+        标题 : //h1[@class="title-article"]/text()
+        发表时间 : //span[@class="time"]/text()
+        阅读数 : //span[@class="read-count"]/text()
+3. 知识点
+    1. extract() : 获取选择器对象中的文本内容
+        response.xpath('xpath表达式')
+            得到的结果 : [<selector ...,>data='文本内容']
+    2. 爬虫程序中, start_urls必须为列表
+        start_urls = []
+4. 腾讯招聘(数据持久化存储)
+    1. 网站 : https://hr.tencent.com/position.php?start=0
+    2. Xpath匹配
+        基准的Xpath表达式 : //table[@class="tablelist"]//tr 第一个和最后一个不是
+                         //tr[@class="even"] |//tr[@class="odd"]
+        职位名称 : ./td[1]/a/text()
+        职位类别 : ./td[2]/text()
+        招聘人数 : ./td[3]/text()
+        工作地点 : ./td[4]/text()
+        发布时间 : ./td[5]/text()        
+        职位链接 : ./td[1]/a/@href
+5. 日志级别及保存日志文件
+    LOG_LEVEL = ''
+    LOG_FILE = '文件名.log'
+    5层警告级别
+        1. CRITICAL 严重错误
+        2. ERROR 一般错误
+        3. WARNING 警告信息
+        4. DEBUG 调试信息
+        5. INFO 一般信息
+6. 保存为csv或json文件
+    1. scrapy crawl tengxun -o Tencent.json
+        json文件编码问题 : 在settings.py中添加
+            FEED_EXPORT_ENCONDING = 'utf-8'
+    2. scrapy crawl tengxun -o Tencent.csv
+        csv文件出现空行的解决方法:
+7. Daomu
+    1. URL : http://www.daomubiji.com/dao-mu-bi-ji-1
+    2. 爬取目标 : 
+        基准 : //article/a/text().extract()
+            得到的结果 : 列表
+        标题 : 
+        章节 : 
+        章节名称 : 
+        链接 : 
+        
+1. 创建项目Daomu
+2. 创建爬虫文件 daomu
+3. 在pipelines.py中创建2个类(mysql和mongo)
+4. 在settings.py中设置好3个管道
+5. 在settings.py中设置相关选项(级别 DEBUG)
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
