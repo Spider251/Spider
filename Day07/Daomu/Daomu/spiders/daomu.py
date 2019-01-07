@@ -5,9 +5,10 @@ from Daomu.items import DaomuItem
 class DaomuSpider(scrapy.Spider):
     name = 'daomu'
     allowed_domains = ['daomubiji.com']
-    key = input("请输入要爬取的数量")
-    for i in range(0,int(key)):
-        start_urls = ['http://www.daomubiji.com/dao-mu-bi-ji-' + str(i)]
+    base_url = 'http://www.daomubiji.com/dao-mu-bi-ji-'
+    offset = 1
+    start_urls = [base_url + str(offset)]
+
 
     def parse(self, response):
         item = DaomuItem()
@@ -23,3 +24,8 @@ class DaomuSpider(scrapy.Spider):
             item["bookLink"] = response.xpath('//article/a/@href').extract()[i]
             i += 1
             yield item
+        if self.offset < 46:
+            self.offset += 1
+            url = self.base_url + str(self.offset)
+            yield scrapy.Request(url,callback=self.parse)
+

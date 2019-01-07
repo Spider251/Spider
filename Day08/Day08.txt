@@ -1,0 +1,125 @@
+1.response.xpath()
+    结果: 列表,选择器对象
+    extract() : 提取文本内容 将列表中所有元素序列化为Unicode字符串
+2. MongoDB持久化存储
+    1. settings.py相关变量
+        MONGO_HOST = ""
+        MONGO_PORT = 27017
+        MONGO_DB = ""
+        MONGO_SET = ""
+    2. pipelines.py定义相关类
+        from 项目名.settings import *
+        class MongoPipeline(objects):
+            def __init(self):
+                pass
+            def process_item(self,item,spider):
+                return item
+            def class_spider(self,spider):
+                pass
+    3. settings.py 设置ITEM_PIPELINES
+        ITEM_PIPELINES = {
+                '项目名.pipelines.类名' : 200,
+                }
+3. settings.py常用变量
+    LOG_LEVEL = ''
+    LOG_FILE = 'XXX.log'
+    FEED_EXPORT_ENCODING = 'utf-8'
+4. 日志级别
+    pass
+5. Anconda命令
+    1. scrapy shell URL
+    2. response.text : string 类型
+    3. response.body : bytes类型
+    4. requests.headers : 请求头(字典)
+    5. requests.meta : 定义代理等参数相关信息{}
+    6. requests.xpath('')
+6. scrapy.Request()常用参数
+    1. url : URL地址
+    2. callback : 指定解析函数
+    3. headers : 请求头(不需要)
+    4. meta : 字典
+        1. 定义代理等相关参数信息
+        2. 在不同请求之间传递数据
+    5. dont_filter : 是否忽略域组限制
+        默认为 False : 检查allowed_domains
+    6. encoding : 默认utf-8, 不用配置
+7. 下载器中间件(随机User-Agent)
+    1. settings.py(少量的User-Agent切换)
+        1. USER_AGENT = ''
+        2. DEFAULT_REQUEST_HEADERS = [}
+    2. middlewares.py设置中间件
+        1. 项目目录中新建useragents.py存放大量User-Agent的列表
+        2. middlewares.py定义相关类
+            class RandomUserAgent(self,requests,.)
+                request.headers['User-Agent'] = random.choise(...)
+        3. settings.py
+        DOWNLOADER_MIDDLEWARES = {
+            '项目名.middlewares.类名':200,
+        }
+
+8. 下载器中间件(设置随机代理)
+    1. 新建文件
+9. CrawlSpider类
+    1. Spider的派生类
+        from scrapy.spiders import CrawlSpider
+        定义了一些规则(Rule)来提供跟进链接, 从爬取的网页中,提取链接并继续爬取
+    2. 提取链接的流程(LinkExtractor)
+        1. scrapy shell 腾讯第一页的URL地址
+        2. from scrapy.linkextractors import LinkExtractor
+        3. LinkExtractor(allow="").extrract_links(response)
+    3. 创建爬虫文件模板(CrawlSpider类模板)
+        scrapy genspider -t crawl 爬虫名 域名
+
+腾讯招聘 : url = https://hr.tencent.com/position_detail.php?id=46843
+xpath 表达式 : "//ul[@class='squareli']"
+#匹配结果 : L = [工作职责对象, 工作要求对象]
+L[0].xpath('.//li').extract()
+''.join(['工作职责1','工作职责2','工作职责3',...])
+
+
+
+名称
+人数
+...
+岗位职责
+岗位要求
+
+*********************************************************
+10. 分布式原理 : 多台机器共享1个爬取队列
+11. 实现分布式 : scrapy_redis(重写scrapy调度器)
+12. 为什么使用redis
+    1. Redis是非关系型数据库, key-value形式存储, 结构灵活
+    2. Redis集合, 存储每个Request的指纹(加密)
+13. redis安装
+    1. Windows
+        1. 直接下载
+        2. 添加环境变量
+        3. 启动并连接
+            1. 服务端启动 : cmd终端 : redis-server
+            2. 客户端连接 : redis-cli -h IP地址 指定服务器的
+    2. Ubuntu
+        1. 安装
+            sudo apt-get install redis-server
+        2. 启动
+            redis-server
+        3. 客户端连接
+            redis-cli -h IP地址
+14. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
