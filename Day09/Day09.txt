@@ -1,0 +1,136 @@
+回顾
+1. scrapy.Request()
+    1. meta参数
+        字典, 定义代理信息, 也可以在不同请求之间传递数据
+    2. dont_filter
+        是否忽略域组限制, 默认False
+2. Downloader Middlewares(UA proxy)
+    1. 新建文件存放列表 : 项目目录中
+    2. middlewares.py定义相关类
+        def process_request(self,request,spider):
+            1. request.headers['User-Agent'] = ""
+            2. request.meta['proxy'] = ""
+    3. settings.py中开启下载器中间件
+        DOWNLOADER_MIDDLEWARES={
+            '项目名.middlewares.类名' : 200,
+        }
+3. CrawlSpider类
+    1. 链接提取器
+    scrapy shell中测试链接提取:
+        from scrapy.linkextractors import LinkExtractor
+        LinkExtractor(allow=r'').extract_links(response)
+    2. 快速创建CrawlSpider爬虫文件
+        scrapy genspider -t crawl 爬虫名 域名
+    3. 使用流程
+        1. 导入模块
+            from scrapy.linkextractors import LinkExtractor
+            from scrapy.spiders import CrawlSpider,Rule
+        2. 提取链接
+            Link = LinkExtractor(allow=r'')
+        3. 定义Rule规则
+            rules = (Rule(Link,callback='',follow=True),)
+    4. CrawlSpider运行机制
+        1. 爬虫名 允许域
+        2. start_urls, 获取第1个要爬取的URL
+            1. LinkExtractor()提取链接
+            2. 创建Rule()对象, 指定解析函数,并继续跟进提取的链接
+4. 分布式原理(共享爬取队列)
+    通过redis的数据库,存储3个键值对, 1.请求指纹, 2.item对象, 3.request请求
+    request请求爬取完就消失了
+    当爬取完成之后, 是否清空请求指纹,需要在settings设置
+    
+1. redis_key使用
+    1. 爬虫文件
+        from scrapy_redis.spiders import RedisSpider
+        class TengxunSpider(RedisSpider):
+            # 去掉start_urls
+            redis_key = "tengxunspider:start_urls"
+    2. 把项目拷贝到分布式的不同服务器上, 运行项目
+        scrapy crawl tengxun
+        或者
+        cd spiders
+        scrapy runspider tengxun.py
+    3. 加入windows的redis,发送redis_key
+        redis-cli -h IP地址
+        >>>lpush tengxunspider:start_urls
+        https://hr.tencent.com/position.php?start=0
+2. 验证码处理
+    1. OCR(Optical Character Recognition)
+            光学      字符       识别
+        光学字符识别-原理:通过字符形状--->电子文本
+    2. tesseract-ocr(谷歌维护的OCR开源库,不能import)
+        1. windows安装
+            https://sourceforge.
+            net/projects/tesseract-ocr-alt/files/
+            tesseract-ocr-setup-3.02.02.exe/download
+            安装完成后添加到环境变量
+            默认安装路径
+            C:\Program Files(x86)\Tesseract-OCR
+        2. Ubuntu安装
+            sudo apt-get install tesseract-ocr
+        3. MAC : brew install tesseract
+    3. 验证
+        终端 : tesseract test1.jpg xxx.text
+    4. python模块 : pytesseract
+        Anconda Prompt(管理员)        
+            conda install pytesseract
+        pip install pytesseract
+    5. pytesseract使用示例
+        pytesseract.image_to_string(图片对象)
+3. 打码平台
+    1. 在线打码(识别率高)
+        1. 云打码网址 : http://www.yundama.com/
+        2. 注册用户 - 充值 - 下载接口文档(开发文档)
+        3. 提分价格(类型码,在程序中要写正确)
+4. scrapy抓取图片
+    1. 网址 : http://image.so.com/z?ch=beauty
+    2. F12抓包或者Fiddler抓包工具
+        json地址 : http://image.so.com/zj?ch=beauty&sn=0&listtype=new&temp=1
+        通过分析, 改变sn的值可以获取到不同的图片
+        sn = 0 显示1-30张图片信息
+        sn = 30 显示31-60张图片信息
+        ... ...
+5. 图片管道
+    1. 在settings.py中定义存储路径
+        IMAGES_STORE = '保存路径' ...会自动创建一个full文件保存图片
+    2. pipelines.py
+        from scrapy.pipelines import ImagesPipeline
+        # 定义类
+        class Girlpipeline(ImagesPipeline):
+            def get_media_requests(self,item,info):
+                yield scrapy.Request(item['url'])
+6. 重写爬虫文件的start_requests()方法
+    1. 作用 : 不再爬取start_urls中的地址
+    2. 使用
+        1. 先把start_urls去掉
+        2. def start_requests(self):
+              pass
+7. 手机端app抓取
+    1. 设置手机(见图)
+        1. 手动
+            IP地址 : 你电脑的IP(ipconfig)
+            端口号 : 8888(和Fiddler保持一致)
+    2. 设置电脑(更改注册表)
+    3. 设置Fiddler
+        1. HTTPS选项卡 : ...from all processes
+        2. Connections选项卡
+            1. 端口号 : 8888(和手机保持一致)
+            2. Allow remote computers to Connect
+    3. 重启Fiddler
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+
+        
